@@ -1,0 +1,6 @@
+/shelf/
+/workspace.xml
+/httpRequests/
+*venv/
+.venv
+*.env
