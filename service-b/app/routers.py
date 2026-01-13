@@ -11,14 +11,14 @@ router = APIRouter()
 
 @router.post("/saveCoordinatesToRedis")
 def save_coordinates_to_redis():
-    coordinates_data = load_external_data("http://localhost:8000/coordinates")
-    validated_data = CoordinatesWithIP(**coordinates_data)
-    redis_store(validated_data.ip, validated_data.dict())
-    return {
-        "message": "Coordinates saved successfully",
-        "ip": validated_data.ip,
-        "data": validated_data.dict()
-    }
+    # שלוף נתונים מ-Service A
+    data = load_external_data("http://localhost:8000/coordinates")
+    # בדוק שהנתונים תקינים
+    validated = CoordinatesWithIP(**data)
+    # שמור ב-Redis
+    redis_store(validated.ip, validated.dict())
+    # החזר תשובה למשתמש
+    return {"message": "Saved successfully", "ip": validated.ip}
 
 @router.get("/getCoordinates/{ip}", response_model=CoordinatesWithIP)
 def get_coordinates(ip: str):
