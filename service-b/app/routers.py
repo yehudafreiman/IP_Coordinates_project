@@ -1,31 +1,21 @@
 from fastapi import APIRouter, HTTPException
-import requests
 from storage import redis_store, redis_retrieve
 from schemas import CoordinatesWithIP
-
-# פונקציית עזר
-def load_external_data(url):
-    # שלוף נתונים מ-url
-    response = requests.get(url)
-    # החזר בפורמט json
-    return response.json()
 
 router = APIRouter()
 
 # נקודת קצה לקבלת נתונים ושמירה במסד נתונים
 @router.post("/saveCoordinatesToRedis")
-def save_coordinates_to_redis():
+def save_coordinates_to_redis(data: CoordinatesWithIP):
     try:
-        # שלוף נתונים מ-Service A
-        data = load_external_data("http://localhost:8000/coordinates")
+        # קבל נתונים מ-Service A
         # בדוק שהנתונים תקינים
-        validated = CoordinatesWithIP(**data)
         # שמור ב-Redis
-        redis_store(validated.ip, validated.model_dump())
+        redis_store(data.ip, data.model_dump())
         # החזר תשובה למשתמש
         return {
             "message": "Saved successfully",
-            "ip": validated.ip
+            "ip": data.ip
         }
     # אם לא נתונים לא תקינים או שקיימת שגיאת חיבור – החזר שגיאה
     except Exception:
