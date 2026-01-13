@@ -112,7 +112,7 @@ Content-Type: application/json
 }
 ```
 
-#### שליפת נתונים
+#### שליפת נתונים לפי IP
 ```http
 GET /getCoordinates/{ip}
 ```
@@ -123,6 +123,29 @@ GET /getCoordinates/{ip}
   "ip": "213.151.56.89",
   "lat": 31.7674,
   "lon": 35.2186
+}
+```
+
+#### שליפת כל הנתונים
+```http
+GET /getAllCoordinates
+```
+
+**תשובה:**
+```json
+{
+  "coordinates": [
+    {
+      "ip": "8.8.8.8",
+      "lat": 39.03,
+      "lon": -77.5
+    },
+    {
+      "ip": "213.151.56.89",
+      "lat": 31.7674,
+      "lon": 35.2186
+    }
+  ]
 }
 ```
 
@@ -292,6 +315,31 @@ curl http://localhost:8001/getCoordinates/1.1.1.1
 
 ---
 
+**בדיקה 6: שליפת כל ה-IPs ששמורים במערכת**
+```bash
+curl http://localhost:8001/getAllCoordinates
+```
+
+**תשובה צפויה:**
+```json
+{
+  "coordinates": [
+    {
+      "ip": "8.8.8.8",
+      "lat": 39.03,
+      "lon": -77.5
+    },
+    {
+      "ip": "1.1.1.1",
+      "lat": -27.4766,
+      "lon": 153.0166
+    }
+  ]
+}
+```
+
+---
+
 ## סיכום תהליך בדיקה מלא
 
 ```bash
@@ -317,6 +365,9 @@ curl -X POST http://localhost:8000/ \
 
 # 6. שלוף את ה-IP החדש
 curl http://localhost:8001/getCoordinates/1.1.1.1
+
+# 7. שלוף את כל ה-IPs ששמורים במערכת
+curl http://localhost:8001/getAllCoordinates
 ```
 
 ---
