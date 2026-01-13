@@ -8,4 +8,6 @@ router = APIRouter()
 def locate_ip(ip_address: IPvAnyAddress =Body(...)):
     url = f"http://ip-api.com/json/{ip_address}"
     data = get_coordinates_data(url)
-    return data
+    url = "https://localhost:8001/"
+    info = send_to_service_b(url, data)
+    return info

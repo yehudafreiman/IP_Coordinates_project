@@ -9,6 +9,15 @@ def get_coordinates_data(url):
         raise HTTPException(status_code=502, detail="External API error")
     if info["status"] != "success":
         raise HTTPException(status_code=400, detail="Invalid IP")
-
     data = {"ip": info["query"], "lat": info["lat"], "lon": info["lon"]}
     return data
+
+def send_to_service_b(url, data):
+    try:
+        response = requests.post(url, json = data)
+        info = response.json()
+    except Exception:
+        raise HTTPException(status_code=502, detail="External API error")
+    if info["status"] != "success":
+        raise HTTPException(status_code=400, detail="Invalid IP")
+    return info
