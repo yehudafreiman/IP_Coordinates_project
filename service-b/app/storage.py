@@ -1,7 +1,13 @@
 from redis import Redis
 import json
+import os
 
-redis_conn = Redis(host="localhost", port=6379, decode_responses=True)
+# חיבור ל-Redis באמצעות משתני סביבה
+redis_conn = Redis(
+    host=os.getenv("REDIS_HOST", "localhost"),
+    port=int(os.getenv("REDIS_PORT", "6379")),
+    decode_responses=True
+)
 
 # שמירת נתונים במסד נתונים
 def redis_store(key, value):
