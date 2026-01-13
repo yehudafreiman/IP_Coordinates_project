@@ -1,21 +1,13 @@
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body
 from pydantic import IPvAnyAddress
-import requests, json
 from schemas import IPValidation
+from services import *
 
 router = APIRouter()
 
 @router.post("/")
 def locate_ip(ip_address: IPvAnyAddress =Body(...)):
     url = f"http://ip-api.com/json/{ip_address}"
-    
-    try:
-        response = requests.get(url)
-        info = response.json()
-    except Exception:
-        raise HTTPException(status_code=502, detail="External API error")
-    if info["status"] != "success":
-        raise HTTPException(status_code=400, detail="Invalid IP")
-
-    data = {"ip": info["query"], "lat": info["lat"], "lon": info["lon"]}
+    data = get_coordinates_data(url)
     return data
+
