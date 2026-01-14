@@ -1,18 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-headless
+  name: redis-headless
   labels:
-    app: postgres
-    tier: database
+    app: redis
 spec:
-  # Headless Service - creates DNS records for individual pods
-  # No load balancing - each pod gets its own DNS name
   clusterIP: None
   selector:
-    app: postgres
+    app: redis
   ports:
-  - port: 5432
-    targetPort: 5432
-    name: postgres
-    protocol: TCP
+  - port: 6379
+    targetPort: 6379
+    name: redis

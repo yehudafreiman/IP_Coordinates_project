@@ -1,17 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-api
+  name: resolution-api
   labels:
-    app: user-api
-    tier: application
+    app: resolution-api
 spec:
-  # Regular Service with load balancing
-  type: ClusterIP
+  type: NodePort
   selector:
-    app: user-api
+    app: resolution-api
   ports:
   - port: 8000
     targetPort: 8000
-    name: http
-    protocol: TCP
