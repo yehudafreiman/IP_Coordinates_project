@@ -1,0 +1,41 @@
+services:
+  database:
+    image: redis:latest
+    container_name: database
+    networks:
+      - app-network
+
+  storage_api:
+    build:
+      context: ./service-b
+      dockerfile: app/Dockerfile
+    container_name: storage_api
+    ports:
+      - "8001:8001"
+    environment:
+      - REDIS_HOST=database
+      - REDIS_PORT=6379
+    depends_on:
+      - database
+    networks:
+      - app-network
+
+  resolution_api:
+    build:
+      context: ./service-a
+      dockerfile: app/Dockerfile
+    container_name: resolution_api
+    ports:
+      - "8000:8000"
+    environment:
+      - SERVICE_B_URL=http://storage_api:8001
+    depends_on:
+      - storage_api
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+
