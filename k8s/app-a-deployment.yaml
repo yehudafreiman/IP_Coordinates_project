@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-api
+  labels:
+    app: user-api
+    tier: application
+spec:
+  # Multiple replicas - API is stateless and scalable
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: user-api
+
+  template:
+    metadata:
+      labels:
+        app: user-api
+        tier: application
+    spec:
+      containers:
+      - name: api
+        # This image must be pushed to Docker Hub
+        # Build: docker build -t user-api:1.0 ./api
+        # Tag: docker tag user-api:1.0 <your-dockerhub-username>/user-api:1.0
+        # Push: docker push <your-dockerhub-username>/user-api:1.0
+        # Then update this line to: image: <your-dockerhub-username>/user-api:1.0
+        image: yehudafreiman/user-api:1.0
+
+        ports:
+        - containerPort: 8000
+          name: http
+
+        # Environment variables for database connection
+        # These values connect to the StatefulSet pod via stable DNS
+        env:
+        - name: DB_HOST
+          value: "postgres-0.postgres-headless"  # Stable DNS from StatefulSet
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "appdb"
+        - name: DB_USER
+          value: "appuser"
+        - name: DB_PASSWORD
+          value: "apppass123"
+
+        # Resource limits
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+
+        # Liveness probe - restart if API is unresponsive
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        # Readiness probe - don't send traffic until ready
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
