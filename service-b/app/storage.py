@@ -4,7 +4,7 @@ import os
 
 # חיבור ל-Redis באמצעות משתני סביבה
 redis_conn = Redis(
-    host=os.getenv("REDIS_HOST", "localhost"),
+    host=os.getenv("REDIS_HOST", "redis-headless"),
     port=int(os.getenv("REDIS_PORT", "6379")),
     decode_responses=True
 )

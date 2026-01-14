@@ -21,7 +21,7 @@ spec:
         # Tag: docker tag user-api:1.0 <your-dockerhub-username>/user-api:1.0
         # Push: docker push <your-dockerhub-username>/user-api:1.0
         # Then update this line to: image: <your-dockerhub-username>/user-api:1.0
-        image: yehudafreiman/storage-api:1.0
+        image: yehudafreiman/storage-api:3.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8001
