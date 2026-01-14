@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resolution-api
+  labels:
+    app: resolution-api
+spec:
+  replicas: 1
+  
+  selector:
+    matchLabels:
+      app: resolution-api
+  
+  template:
+    metadata:
+      labels:
+        app: resolution-api
+    spec:
+      containers:
+      - name: container-service-a
+        image: israelyarbloom/resolution-api:v1
+        
+        ports:
+        - containerPort: 8000
+
+        imagePullPolicy: Always
+
+        env:
+        - name: SERVICE_B_URL
+          value: "http://storage-api:8001"
